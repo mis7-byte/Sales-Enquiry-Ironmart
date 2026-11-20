@@ -56,35 +56,34 @@ body { font-family:'Inter',sans-serif; background:#f8fafc; color:#0f172a; }
 <header class="bg-white border-b border-slate-200 z-30 shadow-xs">
   <div class="max-w-[1800px] mx-auto px-3 sm:px-6 lg:px-8 py-3 sm:py-4 space-y-3">
     
-    <div class="flex flex-col xl:flex-row xl:items-center xl:justify-between gap-3 pb-3 border-b border-slate-100">
-      <div class="flex items-center gap-4">
-        <div class="h-12 w-auto flex items-center justify-center shrink-0">
-          <img src="logo.png" alt="Ironmart" class="h-full object-contain" onerror="this.style.display='none'; document.getElementById('textLogoFallback').style.display='flex';" />
+    <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-3 pb-3 border-b border-slate-100">
+      <!-- BRANDING & LOGO -->
+      <div class="flex items-center gap-3.5 sm:gap-4 min-w-0">
+        <div class="h-11 sm:h-14 w-auto flex items-center justify-center shrink-0">
+          <img src="IronmartLogo1.png" alt="Ironmart Logo" class="h-full w-auto max-w-[170px] sm:max-w-[210px] object-contain" onerror="this.style.display='none'; document.getElementById('textLogoFallback').style.display='flex';" />
           <div id="textLogoFallback" class="hidden items-center gap-1">
             <span class="text-2xl font-extrabold tracking-tighter text-slate-800">Iron<span class="text-orange-500">mart</span></span>
           </div>
         </div>
+        <div class="h-9 w-px bg-slate-200 shrink-0"></div>
         <div class="min-w-0">
           <div class="flex flex-wrap items-center gap-2">
             <span class="text-[10px] sm:text-xs font-extrabold uppercase tracking-widest text-slate-500">Private Limited</span>
             <span class="text-slate-300 hidden sm:inline">|</span>
-            <span id="datasetBadge" class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] sm:text-xs font-semibold bg-amber-50 text-amber-900 border border-amber-200 truncate max-w-[240px] sm:max-w-none">
+            <span id="datasetBadge" class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] sm:text-xs font-semibold bg-amber-50 text-amber-900 border border-amber-200 truncate max-w-[240px] sm:max-w-none">
               Connecting to Google Sheet…
             </span>
           </div>
-          <h1 class="text-base sm:text-xl lg:text-2xl font-bold tracking-tight text-slate-900 leading-tight">Executive Dashboard</h1>
+          <h1 class="text-base sm:text-xl lg:text-2xl font-bold tracking-tight text-slate-900 leading-tight mt-0.5">Executive Dashboard</h1>
         </div>
       </div>
       
-      <div class="flex flex-wrap items-center gap-2 no-print">
-        <button id="syncSheetBtn" type="button" class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white text-xs sm:text-sm font-semibold shadow-xs transition active:scale-[0.98]">
+      <!-- ACTION BUTTONS -->
+      <div class="flex flex-wrap items-center gap-2 shrink-0 no-print">
+        <button id="syncSheetBtn" type="button" class="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white text-xs sm:text-sm font-semibold shadow-xs transition active:scale-[0.98]">
           <svg id="syncIcon" class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
           <span>Sync Google Sheet</span>
         </button>
-        <a href="https://docs.google.com/spreadsheets/d/164l9v3nGrUTrgC3R_pt2bcX2FgZb2tGvcODtE55Efkk/edit?gid=0#gid=0" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 border border-slate-300 text-xs sm:text-sm font-semibold transition active:scale-[0.98]">
-          <span>Open Sheet</span>
-          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
-        </a>
         <label for="fileInput" title="Fallback: Upload local Excel/CSV if offline" class="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl border border-dashed border-slate-300 hover:border-blue-600 bg-white hover:bg-blue-50/40 text-xs sm:text-sm font-semibold text-slate-700 cursor-pointer transition active:scale-[0.98]">
           <svg class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/></svg>
           <span id="uploadFileName">Local File</span>
@@ -431,14 +430,13 @@ function parseDateISO(raw) {
   const isoMatch = s.match(/^(\d{4})[-/](\d{1,2})[-/](\d{1,2})/);
   if (isoMatch) return `${isoMatch[1]}-${isoMatch[2].padStart(2,'0')}-${isoMatch[3].padStart(2,'0')}`;
 
-  // Handle DD/MM/YYYY or MM/DD/YYYY (defaults to DD/MM/YYYY if first part > 12, or India locale if ambiguous)
   const dmyMatch = s.match(/^(\d{1,2})[-/](\d{1,2})[-/](\d{4})/);
   if (dmyMatch) {
     let p1 = parseInt(dmyMatch[1], 10), p2 = parseInt(dmyMatch[2], 10);
     let m, d;
     if (p1 > 12) { d = p1; m = p2; }
     else if (p2 > 12) { m = p1; d = p2; }
-    else { d = p1; m = p2; } // DD/MM/YYYY default for Indian sheets; swap to (m=p1, d=p2) if sheet uses US MM/DD/YYYY
+    else { d = p1; m = p2; }
     return `${dmyMatch[3]}-${String(m).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
   }
   const d = new Date(s);
@@ -457,7 +455,6 @@ function parseTimeToMins(val) {
   const str = String(val).trim();
   if (!str || str.includes('1899') || str.toLowerCase() === 'nan') return null;
 
-  // Support 12-hour AM/PM strings exported from Google Sheets (e.g., "10:15:00 AM" or "2:30 PM")
   const ampmMatch = str.match(/^(\d{1,2}):(\d{2})(?::(\d{2}(?:\.\d+)?))?\s*(AM|PM)$/i);
   if (ampmMatch) {
     let h = parseInt(ampmMatch[1], 10);
@@ -469,7 +466,6 @@ function parseTimeToMins(val) {
     return h * 60 + m + (s / 60);
   }
 
-  // Standard 24-hour HH:MM or HH:MM:SS
   const parts = str.split(':');
   if (parts.length < 2) return null;
   const h = parseInt(parts[0], 10), m = parseInt(parts[1], 10);
@@ -477,7 +473,6 @@ function parseTimeToMins(val) {
   return (isNaN(h) || isNaN(m)) ? null : h * 60 + m + (s / 60);
 }
 
-// Normalize column headers so slight spacing/casing differences in Google Sheets still map cleanly
 function getField(row, keys, fallback = '') {
   for (const k of keys) {
     if (row[k] !== undefined && row[k] !== null && String(row[k]).trim() !== '') return row[k];
@@ -581,7 +576,6 @@ async function loadFromGoogleSheet(preserveFilters = false) {
   showLoading(`Fetching live data from "${GOOGLE_SHEET_TAB}"...`);
 
   try {
-    // Cache-busting timestamp ensures latest edits in Google Sheets are pulled immediately
     const url = `${GOOGLE_SHEET_CSV_URL}&_t=${Date.now()}`;
     const response = await fetch(url, { cache: 'no-store' });
 
@@ -607,7 +601,7 @@ async function loadFromGoogleSheet(preserveFilters = false) {
     const nowTime = new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
     const badge = document.getElementById('datasetBadge');
     badge.textContent = `Google Sheet (${GOOGLE_SHEET_TAB}) • ${fmt(activeRows.length)} rows • Synced ${nowTime}`;
-    badge.className = "inline-flex items-center px-2 py-0.5 rounded-full text-[10px] sm:text-xs font-semibold bg-emerald-50 text-emerald-900 border border-emerald-200 truncate";
+    badge.className = "inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] sm:text-xs font-semibold bg-emerald-50 text-emerald-900 border border-emerald-200 truncate";
 
     populateFilters();
     if (preserveFilters) renderAll();
@@ -619,7 +613,7 @@ async function loadFromGoogleSheet(preserveFilters = false) {
     hideLoading();
     const badge = document.getElementById('datasetBadge');
     badge.textContent = `Google Sheet Sync Failed`;
-    badge.className = "inline-flex items-center px-2 py-0.5 rounded-full text-[10px] sm:text-xs font-semibold bg-rose-50 text-rose-900 border border-rose-200 truncate";
+    badge.className = "inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] sm:text-xs font-semibold bg-rose-50 text-rose-900 border border-rose-200 truncate";
     showBanner(`⚠️ ${err.message}`, 'error');
   } finally {
     if (syncIcon) syncIcon.classList.remove('animate-spin');
@@ -646,7 +640,7 @@ function handleFileUpload(file) {
         
         document.getElementById('uploadFileName').textContent = file.name;
         document.getElementById('datasetBadge').textContent = `${file.name} • ${fmt(activeRows.length)} rows`;
-        document.getElementById('datasetBadge').className = "inline-flex items-center px-2 py-0.5 rounded-full text-[10px] sm:text-xs font-semibold bg-blue-50 text-blue-900 border border-blue-200 truncate";
+        document.getElementById('datasetBadge').className = "inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] sm:text-xs font-semibold bg-blue-50 text-blue-900 border border-blue-200 truncate";
         
         populateFilters();
         resetFilters();
