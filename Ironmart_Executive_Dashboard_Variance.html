@@ -47,8 +47,8 @@ body { font-family:'Inter',sans-serif; background:#f8fafc; color:#0f172a; }
 <div id="loadingOverlay" class="hidden fixed inset-0 bg-slate-900/60 z-50 flex items-center justify-center p-4">
   <div class="bg-white rounded-2xl p-6 shadow-2xl flex flex-col items-center gap-3 max-w-sm w-full">
     <div class="animate-spin rounded-full h-10 w-10 border-4 border-blue-900 border-t-transparent"></div>
-    <div class="text-sm font-semibold text-slate-800">Processing Data...</div>
-    <div id="loadingProgressText" class="text-xs text-slate-500 text-center">Reading Excel file…</div>
+    <div class="text-sm font-semibold text-slate-800">Syncing Google Sheet...</div>
+    <div id="loadingProgressText" class="text-xs text-slate-500 text-center">Connecting to EnquiryMaster…</div>
   </div>
 </div>
 
@@ -68,8 +68,8 @@ body { font-family:'Inter',sans-serif; background:#f8fafc; color:#0f172a; }
           <div class="flex flex-wrap items-center gap-2">
             <span class="text-[10px] sm:text-xs font-extrabold uppercase tracking-widest text-slate-500">Private Limited</span>
             <span class="text-slate-300 hidden sm:inline">|</span>
-            <span id="datasetBadge" class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] sm:text-xs font-semibold bg-amber-50 text-amber-900 border border-amber-200 truncate max-w-[200px] sm:max-w-none">
-              Awaiting Data Upload
+            <span id="datasetBadge" class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] sm:text-xs font-semibold bg-amber-50 text-amber-900 border border-amber-200 truncate max-w-[240px] sm:max-w-none">
+              Connecting to Google Sheet…
             </span>
           </div>
           <h1 class="text-base sm:text-xl lg:text-2xl font-bold tracking-tight text-slate-900 leading-tight">Executive Dashboard</h1>
@@ -77,9 +77,17 @@ body { font-family:'Inter',sans-serif; background:#f8fafc; color:#0f172a; }
       </div>
       
       <div class="flex flex-wrap items-center gap-2 no-print">
-        <label for="fileInput" class="group flex items-center gap-2 px-4 py-2 rounded-xl border-2 border-dashed border-blue-400 hover:border-blue-700 bg-blue-50/50 hover:bg-blue-50 text-xs sm:text-sm font-semibold text-blue-900 cursor-pointer transition active:scale-[0.98]">
-          <svg class="w-4 h-4 text-blue-700" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/></svg>
-          <span id="uploadFileName">Upload Raw Excel/CSV</span>
+        <button id="syncSheetBtn" type="button" class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white text-xs sm:text-sm font-semibold shadow-xs transition active:scale-[0.98]">
+          <svg id="syncIcon" class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+          <span>Sync Google Sheet</span>
+        </button>
+        <a href="https://docs.google.com/spreadsheets/d/164l9v3nGrUTrgC3R_pt2bcX2FgZb2tGvcODtE55Efkk/edit?gid=0#gid=0" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 border border-slate-300 text-xs sm:text-sm font-semibold transition active:scale-[0.98]">
+          <span>Open Sheet</span>
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+        </a>
+        <label for="fileInput" title="Fallback: Upload local Excel/CSV if offline" class="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl border border-dashed border-slate-300 hover:border-blue-600 bg-white hover:bg-blue-50/40 text-xs sm:text-sm font-semibold text-slate-700 cursor-pointer transition active:scale-[0.98]">
+          <svg class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/></svg>
+          <span id="uploadFileName">Local File</span>
           <input id="fileInput" type="file" accept=".xlsx,.xls,.csv" class="hidden" />
         </label>
         <button id="resetFiltersBtn" class="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-white hover:bg-slate-100 text-slate-800 border border-slate-300 text-xs sm:text-sm font-semibold active:scale-[0.98]">Reset</button>
@@ -295,7 +303,7 @@ body { font-family:'Inter',sans-serif; background:#f8fafc; color:#0f172a; }
     <div id="nwayPagination" class="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-slate-100 text-xs text-slate-600 no-print"></div>
   </section>
 
-  <!-- Customer Intelligence (UPDATED) -->
+  <!-- Customer Intelligence -->
   <section class="card-section bg-white rounded-xl border border-slate-200 p-4 shadow-2xs space-y-4">
     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-3">
       <div>
@@ -379,11 +387,16 @@ body { font-family:'Inter',sans-serif; background:#f8fafc; color:#0f172a; }
 <footer class="border-t border-slate-200 bg-white py-4 px-6 mt-8">
   <div class="max-w-[1800px] mx-auto flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-slate-500">
     <span>Ironmart Pvt Ltd • Executive Dashboard</span>
-    <span id="footerStatsText">Ready for data...</span>
+    <span id="footerStatsText">Connecting to Google Sheets...</span>
   </div>
 </footer>
 
 <script>
+// =================== GOOGLE SHEET CONFIGURATION ===================
+const GOOGLE_SHEET_ID = '164l9v3nGrUTrgC3R_pt2bcX2FgZb2tGvcODtE55Efkk';
+const GOOGLE_SHEET_TAB = 'EnquiryMaster';
+const GOOGLE_SHEET_CSV_URL = `https://docs.google.com/spreadsheets/d/${GOOGLE_SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(GOOGLE_SHEET_TAB)}`;
+
 // =================== GLOBAL STATE ===================
 let activeRows = [];
 let currentNWayRows = [];
@@ -418,14 +431,15 @@ function parseDateISO(raw) {
   const isoMatch = s.match(/^(\d{4})[-/](\d{1,2})[-/](\d{1,2})/);
   if (isoMatch) return `${isoMatch[1]}-${isoMatch[2].padStart(2,'0')}-${isoMatch[3].padStart(2,'0')}`;
 
-  const mdyMatch = s.match(/^(\d{1,2})[-/](\d{1,2})[-/](\d{4})/);
-  if (mdyMatch) {
-    let p1 = parseInt(mdyMatch[1], 10), p2 = parseInt(mdyMatch[2], 10);
+  // Handle DD/MM/YYYY or MM/DD/YYYY (defaults to DD/MM/YYYY if first part > 12, or India locale if ambiguous)
+  const dmyMatch = s.match(/^(\d{1,2})[-/](\d{1,2})[-/](\d{4})/);
+  if (dmyMatch) {
+    let p1 = parseInt(dmyMatch[1], 10), p2 = parseInt(dmyMatch[2], 10);
     let m, d;
-    if (p1 <= 12) { m = p1; d = p2; }
-    else if (p2 <= 12) { d = p1; m = p2; }
-    else { m = p1; d = p2; }
-    return `${mdyMatch[3]}-${String(m).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    if (p1 > 12) { d = p1; m = p2; }
+    else if (p2 > 12) { m = p1; d = p2; }
+    else { d = p1; m = p2; } // DD/MM/YYYY default for Indian sheets; swap to (m=p1, d=p2) if sheet uses US MM/DD/YYYY
+    return `${dmyMatch[3]}-${String(m).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
   }
   const d = new Date(s);
   if (!Number.isNaN(d.getTime())) return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
@@ -437,10 +451,25 @@ function num(v, fb = null) {
   const n = parseFloat(String(v).replace(/[,₹\s]/g, ''));
   return Number.isFinite(n) ? n : fb;
 }
+
 function parseTimeToMins(val) {
   if (!val) return null;
   const str = String(val).trim();
-  if (str.includes('1899') || str.toLowerCase() === 'nan') return null;
+  if (!str || str.includes('1899') || str.toLowerCase() === 'nan') return null;
+
+  // Support 12-hour AM/PM strings exported from Google Sheets (e.g., "10:15:00 AM" or "2:30 PM")
+  const ampmMatch = str.match(/^(\d{1,2}):(\d{2})(?::(\d{2}(?:\.\d+)?))?\s*(AM|PM)$/i);
+  if (ampmMatch) {
+    let h = parseInt(ampmMatch[1], 10);
+    const m = parseInt(ampmMatch[2], 10);
+    const s = ampmMatch[3] ? parseFloat(ampmMatch[3]) : 0;
+    const period = ampmMatch[4].toUpperCase();
+    if (period === 'PM' && h < 12) h += 12;
+    if (period === 'AM' && h === 12) h = 0;
+    return h * 60 + m + (s / 60);
+  }
+
+  // Standard 24-hour HH:MM or HH:MM:SS
   const parts = str.split(':');
   if (parts.length < 2) return null;
   const h = parseInt(parts[0], 10), m = parseInt(parts[1], 10);
@@ -448,15 +477,33 @@ function parseTimeToMins(val) {
   return (isNaN(h) || isNaN(m)) ? null : h * 60 + m + (s / 60);
 }
 
+// Normalize column headers so slight spacing/casing differences in Google Sheets still map cleanly
+function getField(row, keys, fallback = '') {
+  for (const k of keys) {
+    if (row[k] !== undefined && row[k] !== null && String(row[k]).trim() !== '') return row[k];
+  }
+  const normalizedMap = {};
+  for (const rawKey of Object.keys(row)) {
+    normalizedMap[rawKey.toLowerCase().replace(/[^a-z0-9]/g, '')] = row[rawKey];
+  }
+  for (const k of keys) {
+    const nk = k.toLowerCase().replace(/[^a-z0-9]/g, '');
+    if (normalizedMap[nk] !== undefined && normalizedMap[nk] !== null && String(normalizedMap[nk]).trim() !== '') {
+      return normalizedMap[nk];
+    }
+  }
+  return fallback;
+}
+
 // =================== DATA PROCESSING ===================
 function buildEnrichedRecords(rows) {
-  const valid = rows.filter(r => String(r.CustomerName ?? r.customer ?? '').trim() !== '').map((r, idx) => {
-    const customer = String(r.CustomerName ?? r.customer ?? '').trim();
+  const valid = rows.filter(r => String(getField(r, ['CustomerName', 'Customer Name', 'customer'])).trim() !== '').map((r, idx) => {
+    const customer = String(getField(r, ['CustomerName', 'Customer Name', 'customer'])).trim();
     const customerKey = customer.toUpperCase().replace(/\s+/g, ' ');
-    const date = parseDateISO(r.Date ?? r.date ?? '');
+    const date = parseDateISO(getField(r, ['Date', 'date']));
     
-    const recMins = parseTimeToMins(r.EnquiryReceivedTime);
-    const repMins = parseTimeToMins(r.ReplyTime);
+    const recMins = parseTimeToMins(getField(r, ['EnquiryReceivedTime', 'Enquiry Received Time']));
+    const repMins = parseTimeToMins(getField(r, ['ReplyTime', 'Reply Time']));
     let replyMins = null;
     if (recMins !== null && repMins !== null) {
         let diff = repMins - recMins;
@@ -464,24 +511,29 @@ function buildEnrichedRecords(rows) {
         if (diff >= 0) replyMins = diff;
     }
 
+    const rawStatus = String(getField(r, ['Status', 'status'], 'OPEN')).toUpperCase().trim();
+    const rawAvail = String(getField(r, ['MaterialAvailability', 'Material Availability'], 'UNSPECIFIED')).toUpperCase().trim();
+    const rawNeg = String(getField(r, ['Negotiation', 'negotiation'], 'UNSPECIFIED')).toUpperCase().trim();
+
     return {
-      sNo: String(r['S-No'] ?? r.sNo ?? idx+1).trim(),
+      sNo: String(getField(r, ['S-No', 'SNo', 'S.No', 'sNo'], idx + 1)).trim(),
       date,
-      through: String(r.Through ?? 'UNSPECIFIED').toUpperCase().trim(),
-      salesExec: String(r.SalesExecutive ?? 'UNASSIGNED').toUpperCase().trim(),
+      through: String(getField(r, ['Through', 'through'], 'UNSPECIFIED')).toUpperCase().trim(),
+      salesExec: String(getField(r, ['SalesExecutive', 'Sales Executive'], 'UNASSIGNED')).toUpperCase().trim(),
       customer,
       customerKey,
-      category: String(r.Category ?? 'UNSPECIFIED').toUpperCase().trim(),
-      grade: String(r.Grade ?? 'UNSPECIFIED').toUpperCase().trim(),
-      itemName: String(r.ItemName ?? 'UNSPECIFIED').toUpperCase().trim(),
-      size: String(r.Size ?? 'UNSPECIFIED').toUpperCase().trim(),
-      qtyMt: num(r.QTY_MT ?? r.QTY ?? 0, 0),
-      rate: num(r.Rate ?? null, null),
-      avail: String(r.MaterialAvailability ?? 'UNSPECIFIED').toUpperCase().trim(),
-      remarks: String(r.Remarks ?? 'NO REMARKS').toUpperCase().trim(),
-      status: ['CONFIRMED','OPEN','CLOSED'].includes(String(r.Status).toUpperCase().trim()) ? String(r.Status).toUpperCase().trim() : 'OPEN',
+      category: String(getField(r, ['Category', 'category'], 'UNSPECIFIED')).toUpperCase().trim(),
+      grade: String(getField(r, ['Grade', 'grade'], 'UNSPECIFIED')).toUpperCase().trim(),
+      itemName: String(getField(r, ['ItemName', 'Item Name'], 'UNSPECIFIED')).toUpperCase().trim(),
+      size: String(getField(r, ['Size', 'size'], 'UNSPECIFIED')).toUpperCase().trim(),
+      qtyMt: num(getField(r, ['QTY', 'QTY_MT', 'Qty'], 0), 0),
+      rate: num(getField(r, ['Rate', 'rate'], null), null),
+      avail: rawAvail || 'UNSPECIFIED',
+      negotiation: rawNeg || 'UNSPECIFIED',
+      remarks: String(getField(r, ['Remarks', 'remarks'], 'NO REMARKS')).toUpperCase().trim() || 'NO REMARKS',
+      status: ['CONFIRMED','OPEN','CLOSED'].includes(rawStatus) ? rawStatus : 'OPEN',
       replyMins,
-      precomputedOrderId: String(r.Order_ID ?? '').trim()
+      precomputedOrderId: String(getField(r, ['Order_ID', 'OrderID'], '')).trim()
     };
   });
 
@@ -522,18 +574,70 @@ function buildEnrichedRecords(rows) {
   });
 }
 
-// =================== FILE UPLOAD ===================
+// =================== DIRECT GOOGLE SHEET FETCH ===================
+async function loadFromGoogleSheet(preserveFilters = false) {
+  const syncIcon = document.getElementById('syncIcon');
+  if (syncIcon) syncIcon.classList.add('animate-spin');
+  showLoading(`Fetching live data from "${GOOGLE_SHEET_TAB}"...`);
+
+  try {
+    // Cache-busting timestamp ensures latest edits in Google Sheets are pulled immediately
+    const url = `${GOOGLE_SHEET_CSV_URL}&_t=${Date.now()}`;
+    const response = await fetch(url, { cache: 'no-store' });
+
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status}: Could not access Google Sheet. Verify sharing is set to "Anyone with the link can view".`);
+    }
+
+    const csvText = await response.text();
+    if (csvText.trim().startsWith('<!DOCTYPE html') || csvText.includes('accounts.google.com')) {
+      throw new Error('Google Sheet is private. Please set General Access to "Anyone with the link" (Viewer).');
+    }
+
+    showLoading(`Parsing "${GOOGLE_SHEET_TAB}" records...`);
+    const wb = XLSX.read(csvText, { type: 'string', raw: true });
+    const sheet = wb.Sheets[wb.SheetNames[0]];
+    const rows = XLSX.utils.sheet_to_json(sheet, { defval: '' });
+
+    activeRows = buildEnrichedRecords(rows);
+    if (!activeRows.length) {
+      throw new Error(`No valid customer rows found in tab "${GOOGLE_SHEET_TAB}".`);
+    }
+
+    const nowTime = new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+    const badge = document.getElementById('datasetBadge');
+    badge.textContent = `Google Sheet (${GOOGLE_SHEET_TAB}) • ${fmt(activeRows.length)} rows • Synced ${nowTime}`;
+    badge.className = "inline-flex items-center px-2 py-0.5 rounded-full text-[10px] sm:text-xs font-semibold bg-emerald-50 text-emerald-900 border border-emerald-200 truncate";
+
+    populateFilters();
+    if (preserveFilters) renderAll();
+    else resetFilters();
+
+    hideLoading();
+    showBanner(`✅ Synced ${fmt(activeRows.length)} live rows from Google Sheet (${GOOGLE_SHEET_TAB}) at ${nowTime}.`, 'success');
+  } catch (err) {
+    hideLoading();
+    const badge = document.getElementById('datasetBadge');
+    badge.textContent = `Google Sheet Sync Failed`;
+    badge.className = "inline-flex items-center px-2 py-0.5 rounded-full text-[10px] sm:text-xs font-semibold bg-rose-50 text-rose-900 border border-rose-200 truncate";
+    showBanner(`⚠️ ${err.message}`, 'error');
+  } finally {
+    if (syncIcon) syncIcon.classList.remove('animate-spin');
+  }
+}
+
+// =================== LOCAL FILE FALLBACK ===================
 function handleFileUpload(file) {
   if (!file) return;
-  showLoading("Reading file...");
+  showLoading("Reading local file...");
   const reader = new FileReader();
   reader.onload = e => {
     try {
       const data = new Uint8Array(e.target.result);
       const wb = XLSX.read(data, { type: 'array', cellDates: false });
-      const sheet = wb.SheetNames[0];
-      showLoading(`Parsing sheet "${sheet}"...`);
-      const rows = XLSX.utils.sheet_to_json(wb.Sheets[sheet], { defval: '' });
+      const sheetName = wb.SheetNames.includes(GOOGLE_SHEET_TAB) ? GOOGLE_SHEET_TAB : wb.SheetNames[0];
+      showLoading(`Parsing sheet "${sheetName}"...`);
+      const rows = XLSX.utils.sheet_to_json(wb.Sheets[sheetName], { defval: '' });
       
       showLoading(`Processing ${rows.length} rows...`);
       setTimeout(() => {
@@ -542,12 +646,12 @@ function handleFileUpload(file) {
         
         document.getElementById('uploadFileName').textContent = file.name;
         document.getElementById('datasetBadge').textContent = `${file.name} • ${fmt(activeRows.length)} rows`;
-        document.getElementById('datasetBadge').className = "inline-flex items-center px-2 py-0.5 rounded-full text-[10px] sm:text-xs font-semibold bg-emerald-50 text-emerald-900 border border-emerald-200 truncate";
+        document.getElementById('datasetBadge').className = "inline-flex items-center px-2 py-0.5 rounded-full text-[10px] sm:text-xs font-semibold bg-blue-50 text-blue-900 border border-blue-200 truncate";
         
         populateFilters();
         resetFilters();
         hideLoading();
-        showBanner(`✅ Loaded ${fmt(activeRows.length)} rows successfully.`, 'success');
+        showBanner(`✅ Loaded ${fmt(activeRows.length)} rows from local file "${file.name}".`, 'success');
       }, 50);
     } catch (err) {
       hideLoading();
@@ -562,7 +666,9 @@ function populateFilters() {
   const uniq = fn => [...new Set(activeRows.map(fn).filter(Boolean))].sort((a, b) => a.localeCompare(b));
   const fill = (id, list) => {
     const el = document.getElementById(id);
+    const prev = el.value;
     el.innerHTML = `<option value="ALL">All</option>` + list.map(v => `<option value="${esc(v)}">${esc(v)}</option>`).join('');
+    if (prev && list.includes(prev)) el.value = prev;
   };
   fill('filterExec', uniq(r => r.salesExec));
   fill('filterCategory', uniq(r => r.category));
@@ -571,7 +677,10 @@ function populateFilters() {
   fill('filterSize', uniq(r => r.size));
   const nwaySizeEl = document.getElementById('nwaySizeFilter');
   if (nwaySizeEl) {
-    nwaySizeEl.innerHTML = `<option value="ALL">Size: All</option>` + uniq(r => r.size).map(v => `<option value="${esc(v)}">${esc(v)}</option>`).join('');
+    const prevNwaySize = nwaySizeEl.value;
+    const sizes = uniq(r => r.size);
+    nwaySizeEl.innerHTML = `<option value="ALL">Size: All</option>` + sizes.map(v => `<option value="${esc(v)}">${esc(v)}</option>`).join('');
+    if (prevNwaySize && sizes.includes(prevNwaySize)) nwaySizeEl.value = prevNwaySize;
   }
   fill('filterThrough', uniq(r => r.through));
   document.getElementById('customerDatalist').innerHTML = uniq(r => r.customer).map(c => `<option value="${esc(c)}"></option>`).join('');
@@ -1138,6 +1247,7 @@ const NWAY_DIMS = [
   { key:'customer', label:'Customer' }, { key:'salesExec', label:'Sales Executive' },
   { key:'category', label:'Category' }, { key:'grade', label:'Grade' }, { key:'itemName', label:'Item Name' },
   { key:'size', label:'Size' }, { key:'orderId', label:'Order ID' }, { key:'through', label:'Through' },
+  { key:'negotiation', label:'Negotiation' }, { key:'avail', label:'Availability' },
   { key:'status', label:'Status' }, { key:'date', label:'Date' }
 ];
 
@@ -1279,7 +1389,7 @@ function renderNWay(rows, resetPage = true) {
   renderNWayPage();
 }
 
-// **UPDATED CUSTOMER INTELLIGENCE WITH INLINE DETAILS, SORTING & PAGINATION**
+// **CUSTOMER INTELLIGENCE WITH INLINE DETAILS, SORTING & PAGINATION**
 function renderCustomerIntelPage() {
   const st = tableState.ci;
   const tbody = document.getElementById('customerIntelTbody');
@@ -1648,6 +1758,7 @@ function renderAll() {
   renderExecPerf(rows);
 }
 
+document.getElementById('syncSheetBtn').addEventListener('click', () => loadFromGoogleSheet(true));
 document.getElementById('resetFiltersBtn').addEventListener('click', resetFilters);
 document.getElementById('exportPdfBtn').addEventListener('click', () => window.print());
 document.getElementById('closeBannerBtn').addEventListener('click', hideBanner);
@@ -1664,8 +1775,7 @@ document.getElementById('filterCompare').addEventListener('change', () => {
 
 ['filterDateFrom','filterDateTo','filterExec','filterCategory','filterGrade','filterItemName','filterSize','filterThrough','filterStatus','filterInactive30','ciStatusFilter'].forEach(id => {
   document.getElementById(id).addEventListener('change', () => {
-    if (document.getElementById('filterCompare').checked && id === 'filterDateFrom' || id === 'filterDateTo') {
-      // Keep user-selected comparison dates unless empty
+    if (document.getElementById('filterCompare').checked && (id === 'filterDateFrom' || id === 'filterDateTo')) {
       syncComparePanelVisibility(false);
     }
     renderAll();
@@ -1693,11 +1803,11 @@ document.getElementById('downloadNWayCsvBtn').addEventListener('click', () => {
   const a = document.createElement('a'); a.href = url; a.download = `Ironmart_NWay_${new Date().toISOString().slice(0,10)}.csv`; a.click(); URL.revokeObjectURL(url);
 });
 
-// Init Logic
+// Boot & Auto-Connect to Google Sheet
 initNWay();
 initCustomerIntelSort();
 initExecPerfSort();
-showBanner("Please click 'Upload Raw Excel/CSV' to load your EnquiryMaster data.", "info");
+window.addEventListener('DOMContentLoaded', () => loadFromGoogleSheet(false));
 </script>
 </body>
 </html>
