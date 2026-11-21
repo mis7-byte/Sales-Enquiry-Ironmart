@@ -1,3 +1,8 @@
+
+
+
+HTML icon
+Ironmart_Enquiry_Dashboard_v2
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -68,7 +73,7 @@ body { font-family:'Inter',sans-serif; background:#f8fafc; color:#0f172a; }
         <div class="h-9 w-px bg-slate-200 shrink-0"></div>
         <div class="min-w-0">
           <div class="flex flex-wrap items-center gap-2">
-            <span class="text-[10px] sm:text-xs font-extrabold uppercase tracking-widest text-slate-500"></span>
+            <span class="text-[10px] sm:text-xs font-extrabold uppercase tracking-widest text-slate-500">Private Limited</span>
             <span class="text-slate-300 hidden sm:inline">|</span>
             <span id="datasetBadge" class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] sm:text-xs font-semibold bg-amber-50 text-amber-900 border border-amber-200 truncate max-w-[240px] sm:max-w-none">
               Connecting to Google Sheet…
@@ -790,7 +795,7 @@ function renderKPIs(rows, compState = { enabled: false, rows: [] }) {
   const confQty = confRows.reduce((s, r) => s + r.qtyMt, 0);
   const openQty = rows.filter(r => r.status === 'OPEN').reduce((s, r) => s + r.qtyMt, 0);
   const closedQty = rows.filter(r => r.status === 'CLOSED').reduce((s, r) => s + r.qtyMt, 0);
-  const conv = rows.length ? (confRows.length / rows.length) * 100 : 0;
+  const conv = totalQty > 0 ? (confQty / totalQty) * 100 : 0;
   const replies = rows.map(r => r.replyMins).filter(v => v !== null);
   const avgReply = replies.length ? replies.reduce((a, b) => a + b, 0) / replies.length : 0;
   const dormant = new Set(rows.filter(r => r.inactiveOver30Days).map(r => r.customerKey));
@@ -821,7 +826,7 @@ function renderKPIs(rows, compState = { enabled: false, rows: [] }) {
     const pConfQty = pConfRows.reduce((s, r) => s + r.qtyMt, 0);
     const pOpenQty = pRows.filter(r => r.status === 'OPEN').reduce((s, r) => s + r.qtyMt, 0);
     const pClosedQty = pRows.filter(r => r.status === 'CLOSED').reduce((s, r) => s + r.qtyMt, 0);
-    const pConv = pRows.length ? (pConfRows.length / pRows.length) * 100 : 0;
+    const pConv = pTotalQty > 0 ? (pConfQty / pTotalQty) * 100 : 0;
     const pReplies = pRows.map(r => r.replyMins).filter(v => v !== null);
     const pAvgReply = pReplies.length ? pReplies.reduce((a, b) => a + b, 0) / pReplies.length : 0;
     const pDormant = new Set(pRows.filter(r => r.inactiveOver30Days).map(r => r.customerKey));
@@ -1363,14 +1368,14 @@ function renderNWay(rows, resetPage = true) {
     const totalQty = g.totalQty;
     const confQty = g.confQty;
     const avgRate = g.rates.length ? g.rates.reduce((a, b) => a + b, 0) / g.rates.length : 0;
-    const convPct = g.lines ? (g.confLines / g.lines) * 100 : 0;
+    const convPct = totalQty > 0 ? (confQty / totalQty) * 100 : 0;
     const cg = compGroups.get(key);
     const compOrders = cg ? cg.orders.size : 0;
     const compLines = cg ? cg.lines : 0;
     const compQty = cg ? cg.totalQty : 0;
     const compConfQty = cg ? cg.confQty : 0;
     const compAvgRate = cg && cg.rates.length ? cg.rates.reduce((a, b) => a + b, 0) / cg.rates.length : 0;
-    const compConvPct = cg && cg.lines ? (cg.confLines / cg.lines) * 100 : 0;
+    const compConvPct = cg && cg.totalQty > 0 ? (cg.confQty / cg.totalQty) * 100 : 0;
     const varQty = totalQty - compQty;
     const varQtyPct = compQty !== 0 ? (varQty / Math.abs(compQty)) * 100 : (totalQty !== 0 ? 100 : 0);
     return {
@@ -1621,10 +1626,10 @@ function initExecPerfSort() {
 function renderExecPerf(rows) {
   const g = new Map();
   rows.forEach(r => {
-    if (!g.has(r.salesExec)) g.set(r.salesExec, { name:r.salesExec, lines:0, orders:new Set(), c:0, o:0, cl:0, qty:0, rates:[], replies:[], specs:new Map() });
+    if (!g.has(r.salesExec)) g.set(r.salesExec, { name:r.salesExec, lines:0, orders:new Set(), c:0, o:0, cl:0, qty:0, confQty:0, rates:[], replies:[], specs:new Map() });
     const e = g.get(r.salesExec);
     e.lines++; e.orders.add(r.orderId);
-    if (r.status === 'CONFIRMED') e.c++; else if (r.status === 'OPEN') e.o++; else e.cl++;
+    if (r.status === 'CONFIRMED') { e.c++; e.confQty += r.qtyMt; } else if (r.status === 'OPEN') e.o++; else e.cl++;
     e.qty += r.qtyMt;
     if (r.rate) e.rates.push(r.rate);
     if (r.replyMins !== null) e.replies.push(r.replyMins);
@@ -1635,10 +1640,10 @@ function renderExecPerf(rows) {
   const compExecMap = new Map();
   if (activeCompState.enabled) {
     activeCompState.rows.forEach(r => {
-      if (!compExecMap.has(r.salesExec)) compExecMap.set(r.salesExec, { lines:0, orders:new Set(), c:0, o:0, cl:0, qty:0 });
+      if (!compExecMap.has(r.salesExec)) compExecMap.set(r.salesExec, { lines:0, orders:new Set(), c:0, o:0, cl:0, qty:0, confQty:0 });
       const ce = compExecMap.get(r.salesExec);
       ce.lines++; ce.orders.add(r.orderId);
-      if (r.status === 'CONFIRMED') ce.c++; else if (r.status === 'OPEN') ce.o++; else ce.cl++;
+      if (r.status === 'CONFIRMED') { ce.c++; ce.confQty += r.qtyMt; } else if (r.status === 'OPEN') ce.o++; else ce.cl++;
       ce.qty += r.qtyMt;
     });
   }
@@ -1655,10 +1660,11 @@ function renderExecPerf(rows) {
     const compO = ce ? ce.o : 0;
     const compCl = ce ? ce.cl : 0;
     const compQty = ce ? ce.qty : 0;
-    const compConv = compLines ? (compC / compLines) * 100 : 0;
+    const compConfQty = ce ? ce.confQty : 0;
+    const compConv = compQty > 0 ? (compConfQty / compQty) * 100 : 0;
     return {
       name: e.name, lines: e.lines, orderCount: e.orders.size, c: e.c, o: e.o, cl: e.cl,
-      conv: e.lines ? (e.c / e.lines) * 100 : 0, qty: e.qty, replyMean: rM, replyStd: Math.sqrt(rV), topSpec,
+      conv: e.qty > 0 ? (e.confQty / e.qty) * 100 : 0, qty: e.qty, replyMean: rM, replyStd: Math.sqrt(rV), topSpec,
       compLines, compOrders, compC, compO, compCl, compQty, compConv
     };
   });
@@ -1805,3 +1811,4 @@ window.addEventListener('DOMContentLoaded', () => loadFromGoogleSheet(false));
 </script>
 </body>
 </html>
+Processed and analyzed in code
