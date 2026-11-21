@@ -489,7 +489,7 @@ function getField(row, keys, fallback = '') {
   return fallback;
 }
 
-// =================== MULTI-SELECT COMPONENT ===================
+// =================== EXPANDED MULTI-SELECT COMPONENT ===================
 class CustomMultiSelect {
   constructor(containerId, placeholder, onChange) {
     this.containerId = containerId;
@@ -497,6 +497,7 @@ class CustomMultiSelect {
     this.onChange = onChange;
     this.selected = new Set();
     this.options = [];
+    this.searchQuery = '';
     this.isOpen = false;
     this.render();
   }
@@ -510,12 +511,19 @@ class CustomMultiSelect {
           <span class="ms-label truncate font-medium">${this.placeholder}</span>
           <svg class="w-4 h-4 text-slate-400 shrink-0 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
         </button>
-        <div class="ms-dropdown hidden absolute z-50 mt-1 w-full bg-white border border-slate-300 rounded-lg shadow-xl max-h-60 overflow-y-auto">
-          <div class="flex items-center justify-between px-2 py-1.5 border-b border-slate-100 bg-slate-50 sticky top-0 z-10">
-            <button type="button" class="ms-clear text-[10px] font-bold text-blue-600 hover:text-blue-800 uppercase tracking-wider">Clear All</button>
-            <button type="button" class="ms-close text-slate-400 hover:text-slate-600 p-1 text-lg leading-none">&times;</button>
+        <div class="ms-dropdown hidden absolute right-0 sm:left-0 sm:right-auto z-50 mt-1 w-72 sm:w-80 max-w-[92vw] bg-white border border-slate-300 rounded-xl shadow-2xl overflow-hidden">
+          <div class="p-2 border-b border-slate-200 bg-slate-50 space-y-1.5 sticky top-0 z-10">
+            <div class="flex items-center justify-between gap-2">
+              <div class="flex items-center gap-2">
+                <button type="button" class="ms-select-all text-[10px] font-bold text-emerald-700 hover:text-emerald-900 uppercase tracking-wider">Select Shown</button>
+                <span class="text-slate-300">|</span>
+                <button type="button" class="ms-clear text-[10px] font-bold text-blue-600 hover:text-blue-800 uppercase tracking-wider">Clear All</button>
+              </div>
+              <button type="button" class="ms-close text-slate-500 hover:text-slate-800 px-1.5 text-base font-bold leading-none">&times;</button>
+            </div>
+            <input type="text" class="ms-search w-full rounded-md border border-slate-300 bg-white px-2 py-1 text-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-800" placeholder="Filter options..." />
           </div>
-          <div class="ms-list p-1 space-y-0.5"></div>
+          <div class="ms-list p-1.5 space-y-0.5 max-h-72 overflow-y-auto overflow-x-auto"></div>
         </div>
       </div>
     `;
@@ -525,12 +533,20 @@ class CustomMultiSelect {
     const list = el.querySelector('.ms-list');
     const label = el.querySelector('.ms-label');
     const clearBtn = el.querySelector('.ms-clear');
+    const selectAllBtn = el.querySelector('.ms-select-all');
+    const searchInput = el.querySelector('.ms-search');
     const closeBtn = el.querySelector('.ms-close');
 
     const toggleOpen = (e) => {
       e.stopPropagation();
+      document.querySelectorAll('.ms-dropdown').forEach(d => {
+        if (d !== dropdown) d.classList.add('hidden');
+      });
       this.isOpen = !this.isOpen;
       dropdown.classList.toggle('hidden', !this.isOpen);
+      if (this.isOpen) {
+        setTimeout(() => searchInput.focus(), 10);
+      }
     };
 
     btn.addEventListener('click', toggleOpen);
@@ -542,19 +558,40 @@ class CustomMultiSelect {
       this.clear();
     });
 
-    // Need access to updateUI and list populated
-    this.dom = { btn, dropdown, list, label };
+    selectAllBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const visibleOpts = this.getFilteredOptions();
+      visibleOpts.forEach(opt => this.selected.add(opt));
+      this.updateUI(true);
+      if (this.onChange) this.onChange();
+    });
+
+    searchInput.addEventListener('input', (e) => {
+      e.stopPropagation();
+      this.searchQuery = e.target.value.trim().toLowerCase();
+      this.renderOptionsList();
+    });
+
+    searchInput.addEventListener('click', (e) => e.stopPropagation());
+
+    this.dom = { btn, dropdown, list, label, searchInput };
+  }
+
+  getFilteredOptions() {
+    if (!this.searchQuery) return this.options;
+    return this.options.filter(opt => String(opt).toLowerCase().includes(this.searchQuery));
   }
 
   setOptions(options) {
     this.options = options;
     this.selected.clear();
+    this.searchQuery = '';
+    if (this.dom && this.dom.searchInput) this.dom.searchInput.value = '';
     this.updateUI();
   }
 
   clear() {
     this.selected.clear();
-    this.dom.list.querySelectorAll('input').forEach(cb => cb.checked = false);
     this.updateUI();
     if (this.onChange) this.onChange();
   }
@@ -564,39 +601,50 @@ class CustomMultiSelect {
     this.dom.dropdown.classList.add('hidden');
   }
 
-  updateUI() {
-    const label = this.dom.label;
+  renderOptionsList() {
     const list = this.dom.list;
-    
-    // Update label text
-    if (this.selected.size === 0) {
-      label.textContent = this.placeholder;
-      label.classList.remove('text-blue-700');
-    } else if (this.selected.size === 1) {
-      label.textContent = Array.from(this.selected)[0];
-      label.classList.add('text-blue-700');
-    } else {
-      label.textContent = `${this.selected.size} Selected`;
-      label.classList.add('text-blue-700');
+    const filtered = this.getFilteredOptions();
+
+    if (!filtered.length) {
+      list.innerHTML = `<div class="px-2 py-3 text-xs text-slate-400 text-center">No matching options</div>`;
+      return;
     }
 
-    // Rebuild list
-    list.innerHTML = this.options.map(opt => `
-      <label class="flex items-center gap-2 px-2 py-1.5 hover:bg-slate-50 rounded cursor-pointer">
-        <input type="checkbox" value="${esc(opt)}" ${this.selected.has(opt) ? 'checked' : ''} class="w-3.5 h-3.5 text-blue-600 rounded border-slate-300 focus:ring-blue-600">
-        <span class="text-xs text-slate-700 truncate select-none">${esc(opt)}</span>
+    list.innerHTML = filtered.map(opt => `
+      <label class="flex items-start gap-2 px-2 py-1.5 hover:bg-blue-50/70 rounded cursor-pointer">
+        <input type="checkbox" value="${esc(opt)}" ${this.selected.has(opt) ? 'checked' : ''} class="mt-0.5 shrink-0 w-3.5 h-3.5 text-blue-600 rounded border-slate-300 focus:ring-blue-600">
+        <span class="text-xs text-slate-800 whitespace-nowrap select-none">${esc(opt)}</span>
       </label>
     `).join('');
 
-    // Attach listeners
     list.querySelectorAll('input[type="checkbox"]').forEach(cb => {
       cb.addEventListener('change', (e) => {
         if (e.target.checked) this.selected.add(e.target.value);
         else this.selected.delete(e.target.value);
-        this.updateUI();
+        this.updateLabel();
         if (this.onChange) this.onChange();
       });
     });
+  }
+
+  updateLabel() {
+    const label = this.dom.label;
+    if (this.selected.size === 0) {
+      label.textContent = this.placeholder;
+      label.classList.remove('text-blue-700', 'font-semibold');
+      label.classList.add('font-medium');
+    } else if (this.selected.size === 1) {
+      label.textContent = Array.from(this.selected)[0];
+      label.classList.add('text-blue-700', 'font-semibold');
+    } else {
+      label.textContent = `${this.selected.size} Selected`;
+      label.classList.add('text-blue-700', 'font-semibold');
+    }
+  }
+
+  updateUI() {
+    this.updateLabel();
+    this.renderOptionsList();
   }
 
   getSelected() {
@@ -881,7 +929,6 @@ function getFilteredRows(overrideDateFrom = null, overrideDateTo = null) {
     if (dT && r.date > dT) return false;
     if (cust && !r.customer.toLowerCase().includes(cust)) return false;
     
-    // Check array filters. If array is empty -> no filter applied (show all). Else must match.
     if (execArr.length > 0 && !execArr.includes(r.salesExec)) return false;
     if (catArr.length > 0 && !catArr.includes(r.category)) return false;
     if (grArr.length > 0 && !grArr.includes(r.grade)) return false;
@@ -1050,7 +1097,6 @@ function renderCharts(rows, compState = { enabled: false, rows: [] }) {
   const compEnabled = compState.enabled;
   const cRows = compEnabled ? compState.rows : [];
 
-  // 1. Exec Status
   const ex = new Map(), cEx = new Map();
   rows.forEach(r => {
     if (!ex.has(r.salesExec)) ex.set(r.salesExec, { c:0, o:0, cl:0 });
@@ -1084,7 +1130,6 @@ function renderCharts(rows, compState = { enabled: false, rows: [] }) {
   attachChartVarianceTooltip(cfgExec, compEnabled ? exMap : null, ' MT');
   mountChart('exec', 'chartExecStatus', cfgExec);
 
-  // 2. Status by %
   const stCount = { CONFIRMED: 0, OPEN: 0, CLOSED: 0 };
   const cStCount = { CONFIRMED: 0, OPEN: 0, CLOSED: 0 };
   rows.forEach(r => stCount[r.status]++);
@@ -1110,7 +1155,6 @@ function renderCharts(rows, compState = { enabled: false, rows: [] }) {
   }
   mountChart('statusPct', 'chartStatusPct', cfgStatusPct);
 
-  // 3. Category Qty by Status
   const cat = new Map(), cCat = new Map();
   rows.forEach(r => {
     if (!cat.has(r.category)) cat.set(r.category, { c:0, o:0, cl:0 });
@@ -1143,7 +1187,6 @@ function renderCharts(rows, compState = { enabled: false, rows: [] }) {
   attachChartVarianceTooltip(cfgCat, compEnabled ? catMap : null, ' MT');
   mountChart('catStatus', 'chartCategoryStatus', cfgCat);
 
-  // 4. Material Availability
   const avail = {}, cAvail = {};
   rows.forEach(r => avail[r.avail] = (avail[r.avail]||0) + 1);
   cRows.forEach(r => cAvail[r.avail] = (cAvail[r.avail]||0) + 1);
@@ -1168,7 +1211,6 @@ function renderCharts(rows, compState = { enabled: false, rows: [] }) {
   }
   mountChart('avail', 'chartAvailability', cfgAvail);
 
-  // 5. Item Name Qty
   const item = new Map(), cItem = new Map();
   rows.forEach(r => item.set(r.itemName, (item.get(r.itemName)||0) + r.qtyMt));
   cRows.forEach(r => cItem.set(r.itemName, (cItem.get(r.itemName)||0) + r.qtyMt));
@@ -1183,7 +1225,6 @@ function renderCharts(rows, compState = { enabled: false, rows: [] }) {
   attachChartVarianceTooltip(cfgItem, compEnabled ? itemMap : null, ' MT');
   mountChart('item', 'chartItemName', cfgItem);
 
-  // 6. Size Wise Qty
   const size = new Map(), cSize = new Map();
   rows.forEach(r => size.set(r.size, (size.get(r.size)||0) + r.qtyMt));
   cRows.forEach(r => cSize.set(r.size, (cSize.get(r.size)||0) + r.qtyMt));
@@ -1198,7 +1239,6 @@ function renderCharts(rows, compState = { enabled: false, rows: [] }) {
   attachChartVarianceTooltip(cfgSize, compEnabled ? sizeMap : null, ' MT');
   mountChart('size', 'chartSize', cfgSize);
 
-  // 7. Customer Qty
   const cust = new Map(), cCust = new Map();
   rows.forEach(r => cust.set(r.customer, (cust.get(r.customer)||0) + r.qtyMt));
   cRows.forEach(r => cCust.set(r.customer, (cCust.get(r.customer)||0) + r.qtyMt));
@@ -1213,7 +1253,6 @@ function renderCharts(rows, compState = { enabled: false, rows: [] }) {
   attachChartVarianceTooltip(cfgCust, compEnabled ? custMap : null, ' MT');
   mountChart('cust', 'chartCustomer', cfgCust);
 
-  // 8. Date of Month (Day)
   const dayMap = new Map(), cDayMap = new Map();
   rows.forEach(r => {
       if(!r.date) return;
@@ -1236,7 +1275,6 @@ function renderCharts(rows, compState = { enabled: false, rows: [] }) {
   attachChartVarianceTooltip(cfgDay, compEnabled ? dayCompLookup : null, ' MT');
   mountChart('day', 'chartDayOfMonth', cfgDay);
 
-  // 9. Closed Root Cause
   const closed = rows.filter(r => r.status === 'CLOSED');
   const cClosed = cRows.filter(r => r.status === 'CLOSED');
   const reason = new Map(), cReason = new Map();
@@ -1253,7 +1291,6 @@ function renderCharts(rows, compState = { enabled: false, rows: [] }) {
   attachChartVarianceTooltip(cfgReason, compEnabled ? reasonMap : null, '');
   mountChart('reason', 'chartClosedCause', cfgReason);
 
-  // 10. Medium Comparison
   const med = new Map(), cMed = new Map();
   rows.forEach(r => {
     if (!med.has(r.through)) med.set(r.through, { total:0, conf:0 });
@@ -1516,7 +1553,6 @@ function renderNWay(rows, resetPage = true) {
   renderNWayPage();
 }
 
-// **CUSTOMER INTELLIGENCE WITH INLINE DETAILS, SORTING & PAGINATION**
 function renderCustomerIntelPage() {
   const st = tableState.ci;
   const tbody = document.getElementById('customerIntelTbody');
@@ -1802,7 +1838,6 @@ function renderExecPerf(rows) {
   updateHeaderSortIndicators('execPerfThead', tableState.execPerf.sortKey, tableState.execPerf.sortDir);
   renderExecPerfPage();
 
-  // Same Material Rate Comparison Matrix
   const execs = [...new Set(rows.map(r => r.salesExec))].sort();
   const mm = new Map();
   rows.forEach(r => {
