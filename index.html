@@ -241,7 +241,7 @@ body { font-family:'Inter',sans-serif; background:#f8fafc; color:#0f172a; }
       <div id="kpiClosedQty" class="mt-1 text-xl font-bold text-rose-700 tabular-nums">-</div>
     </div>
     <div class="bg-white rounded-xl border border-slate-200 p-3 shadow-2xs">
-      <div class="text-[10px] font-semibold uppercase text-slate-500">Conversion %</div>
+      <div class="text-[10px] font-semibold uppercase text-slate-500">Conversion % (Qty)</div>
       <div id="kpiConv" class="mt-1 text-xl font-bold text-blue-800 tabular-nums">-</div>
     </div>
     <div class="bg-white rounded-xl border border-slate-200 p-3 shadow-2xs">
@@ -300,8 +300,8 @@ body { font-family:'Inter',sans-serif; background:#f8fafc; color:#0f172a; }
   <section class="card-section bg-white rounded-xl border border-slate-200 p-4 shadow-2xs space-y-4">
     <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-3 border-b border-slate-100 pb-3">
       <div>
-        <h2 class="text-base font-bold text-slate-900">N-Way Comparison Builder</h2>
-        <p class="text-xs text-slate-500">Combine dimensions to analyze performance. Click column headers to sort Asc/Desc.</p>
+        <h2 class="text-base font-bold text-slate-900">N-Way Comparison Builder (Qty Tonnage Basis)</h2>
+        <p class="text-xs text-slate-500">Combine dimensions to analyze tonnage performance, weighted rate, and Qty conversion %. Click headers to sort Asc/Desc.</p>
       </div>
       <div class="flex flex-wrap items-center gap-2">
         <select id="nwayDim1" class="rounded-lg border border-blue-300 bg-blue-50/30 px-2 py-1.5 text-xs font-semibold text-slate-900"></select>
@@ -328,8 +328,8 @@ body { font-family:'Inter',sans-serif; background:#f8fafc; color:#0f172a; }
   <section class="card-section bg-white rounded-xl border border-slate-200 p-4 shadow-2xs space-y-4">
     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-3">
       <div>
-        <h2 class="text-base font-bold text-slate-900">Customer Intelligence</h2>
-        <p class="text-xs text-slate-500">Click any row to see line-item breakdown. Click headers to sort Asc/Desc. Ref Date: <span id="refDateSpan" class="font-bold text-slate-800"></span></p>
+        <h2 class="text-base font-bold text-slate-900">Customer Intelligence (Qty Tonnage Basis)</h2>
+        <p class="text-xs text-slate-500">Confirmed, Open, and Closed values and % shares calculated by Qty (MT). Click any row for line-item breakdown. Ref Date: <span id="refDateSpan" class="font-bold text-slate-800"></span></p>
       </div>
       <div class="flex flex-wrap items-center gap-3">
         <select id="ciStatusFilter" class="rounded-lg border border-slate-300 bg-white px-2 py-1.5 text-xs font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-800">
@@ -351,9 +351,9 @@ body { font-family:'Inter',sans-serif; background:#f8fafc; color:#0f172a; }
           <tr>
             <th class="py-3 px-3 cursor-pointer select-none hover:bg-slate-100" data-sort="name">Customer Name <span class="sort-ind">⇅</span></th>
             <th class="py-3 px-3 text-right cursor-pointer select-none hover:bg-slate-100" data-sort="orderCount">Orders <span class="sort-ind">⇅</span></th>
-            <th class="py-3 px-3 text-right text-emerald-700 cursor-pointer select-none hover:bg-slate-100" data-sort="c">Conf <span class="sort-ind">⇅</span></th>
-            <th class="py-3 px-3 text-right text-amber-700 cursor-pointer select-none hover:bg-slate-100" data-sort="o">Open <span class="sort-ind">⇅</span></th>
-            <th class="py-3 px-3 text-right text-rose-700 cursor-pointer select-none hover:bg-slate-100" data-sort="cl">Closed <span class="sort-ind">⇅</span></th>
+            <th class="py-3 px-3 text-right text-emerald-700 cursor-pointer select-none hover:bg-slate-100" data-sort="confQty">Conf (MT) <span class="sort-ind">⇅</span></th>
+            <th class="py-3 px-3 text-right text-amber-700 cursor-pointer select-none hover:bg-slate-100" data-sort="openQty">Open (MT) <span class="sort-ind">⇅</span></th>
+            <th class="py-3 px-3 text-right text-rose-700 cursor-pointer select-none hover:bg-slate-100" data-sort="closedQty">Closed (MT) <span class="sort-ind">⇅</span></th>
             <th class="py-3 px-3 text-right cursor-pointer select-none hover:bg-slate-100" data-sort="qty">QTY (MT) <span class="sort-ind">▼</span></th>
             <th class="py-3 px-3 cursor-pointer select-none hover:bg-slate-100" data-sort="topSpec">Top Spec (Cat-Grade-Item-Size) <span class="sort-ind">⇅</span></th>
             <th class="py-3 px-3 cursor-pointer select-none hover:bg-slate-100" data-sort="last">Last Date <span class="sort-ind">⇅</span></th>
@@ -369,23 +369,23 @@ body { font-family:'Inter',sans-serif; background:#f8fafc; color:#0f172a; }
   <!-- Sales Exec Performance -->
   <section class="card-section bg-white rounded-xl border border-slate-200 p-4 shadow-2xs space-y-4">
     <div>
-      <h2 class="text-base font-bold text-slate-900">Sales Executive Performance</h2>
-      <p class="text-xs text-slate-500">Volume, conversion, reply variance, and same-material rate comparison. Click headers to sort Asc/Desc.</p>
+      <h2 class="text-base font-bold text-slate-900">Sales Executive Performance (Qty Tonnage Basis)</h2>
+      <p class="text-xs text-slate-500">Confirmed/Open/Closed tonnage, Qty conversion %, top spec by tonnage, and Qty-weighted rate comparison. Click headers to sort Asc/Desc.</p>
     </div>
     <div class="table-scroll overflow-x-auto max-h-[420px]">
       <table class="min-w-full text-left text-xs">
         <thead id="execPerfThead" class="bg-slate-50 text-slate-600 font-semibold uppercase tracking-wider sticky top-0 z-10">
           <tr>
             <th class="py-3 px-3 cursor-pointer select-none hover:bg-slate-100" data-sort="name">Executive <span class="sort-ind">⇅</span></th>
-            <th class="py-3 px-3 text-right cursor-pointer select-none hover:bg-slate-100" data-sort="lines">Enquiries <span class="sort-ind">▼</span></th>
+            <th class="py-3 px-3 text-right cursor-pointer select-none hover:bg-slate-100" data-sort="lines">Enquiries <span class="sort-ind">⇅</span></th>
             <th class="py-3 px-3 text-right cursor-pointer select-none hover:bg-slate-100" data-sort="orderCount">Orders <span class="sort-ind">⇅</span></th>
-            <th class="py-3 px-3 text-right text-emerald-700 cursor-pointer select-none hover:bg-slate-100" data-sort="c">Conf <span class="sort-ind">⇅</span></th>
-            <th class="py-3 px-3 text-right text-amber-700 cursor-pointer select-none hover:bg-slate-100" data-sort="o">Open <span class="sort-ind">⇅</span></th>
-            <th class="py-3 px-3 text-right text-rose-700 cursor-pointer select-none hover:bg-slate-100" data-sort="cl">Closed <span class="sort-ind">⇅</span></th>
-            <th class="py-3 px-3 text-right cursor-pointer select-none hover:bg-slate-100" data-sort="conv">Conv % <span class="sort-ind">⇅</span></th>
-            <th class="py-3 px-3 text-right cursor-pointer select-none hover:bg-slate-100" data-sort="qty">QTY (MT) <span class="sort-ind">⇅</span></th>
+            <th class="py-3 px-3 text-right text-emerald-700 cursor-pointer select-none hover:bg-slate-100" data-sort="confQty">Conf (MT) <span class="sort-ind">⇅</span></th>
+            <th class="py-3 px-3 text-right text-amber-700 cursor-pointer select-none hover:bg-slate-100" data-sort="openQty">Open (MT) <span class="sort-ind">⇅</span></th>
+            <th class="py-3 px-3 text-right text-rose-700 cursor-pointer select-none hover:bg-slate-100" data-sort="closedQty">Closed (MT) <span class="sort-ind">⇅</span></th>
+            <th class="py-3 px-3 text-right cursor-pointer select-none hover:bg-slate-100" data-sort="conv">Conv % (Qty) <span class="sort-ind">⇅</span></th>
+            <th class="py-3 px-3 text-right cursor-pointer select-none hover:bg-slate-100" data-sort="qty">QTY (MT) <span class="sort-ind">▼</span></th>
             <th class="py-3 px-3 text-right cursor-pointer select-none hover:bg-slate-100" data-sort="replyMean">Reply Time (Mean±Std) <span class="sort-ind">⇅</span></th>
-            <th class="py-3 px-3 cursor-pointer select-none hover:bg-slate-100" data-sort="topSpec">Top Spec Handled <span class="sort-ind">⇅</span></th>
+            <th class="py-3 px-3 cursor-pointer select-none hover:bg-slate-100" data-sort="topSpec">Top Spec Handled (By Qty) <span class="sort-ind">⇅</span></th>
           </tr>
         </thead>
         <tbody id="execPerfTbody" class="divide-y divide-slate-100 text-slate-700 tabular-nums"></tbody>
@@ -393,7 +393,7 @@ body { font-family:'Inter',sans-serif; background:#f8fafc; color:#0f172a; }
     </div>
     <div id="execPerfPagination" class="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-slate-100 text-xs text-slate-600 no-print"></div>
     <div class="pt-3 border-t border-slate-100">
-      <h3 class="text-sm font-bold text-slate-900 mb-2">Same Material Rate Comparison</h3>
+      <h3 class="text-sm font-bold text-slate-900 mb-2">Same Material Rate Comparison (Qty-Weighted Avg ₹/MT)</h3>
       <div class="table-scroll overflow-x-auto max-h-[320px]">
         <table class="min-w-full text-left text-xs">
           <thead id="execRateThead" class="bg-slate-800 text-white font-semibold uppercase tracking-wider sticky top-0 z-10"></thead>
@@ -444,7 +444,6 @@ function hideBanner() { document.getElementById('statusBanner').classList.add('h
 function showLoading(msg) { document.getElementById('loadingProgressText').textContent = msg; document.getElementById('loadingOverlay').classList.remove('hidden'); }
 function hideLoading() { document.getElementById('loadingOverlay').classList.add('hidden'); }
 
-// Parse source dates strictly as MM/DD/YYYY (Google Sheet format) -> internal YYYY-MM-DD
 function parseDateISO(raw) {
   if (!raw) return '';
   if (typeof raw === 'number' && raw > 20000) {
@@ -466,7 +465,6 @@ function parseDateISO(raw) {
   return s;
 }
 
-// Convert internal YYYY-MM-DD -> display DD/MM/YYYY everywhere on frontend
 function fmtDateDMY(isoStr) {
   if (!isoStr || isoStr === '-') return isoStr || '-';
   const m = String(isoStr).trim().match(/^(\d{4})-(\d{2})-(\d{2})$/);
@@ -474,7 +472,6 @@ function fmtDateDMY(isoStr) {
   return `${m[3]}/${m[2]}/${m[1]}`;
 }
 
-// Parse user-typed DD/MM/YYYY input -> internal YYYY-MM-DD
 function parseDMYToISO(dmyStr) {
   if (!dmyStr) return '';
   const s = String(dmyStr).trim();
@@ -1069,6 +1066,22 @@ function formatVarHtml(curr, prev, decimals = 0, suffix = '') {
   return `<div class="text-[10px] font-semibold ${cls} mt-1 leading-tight">${arrow} ${sign}${fmt(Math.abs(diff), decimals)}${suffix} (${pctStr})</div>`;
 }
 
+// Helper for tonnage-weighted average rate
+function calcQtyWeightedRate(rateEntries) {
+  let weightedSum = 0, weightQty = 0, simpleSum = 0;
+  rateEntries.forEach(x => {
+    const r = typeof x === 'number' ? x : x.rate;
+    const q = typeof x === 'number' ? 0 : (x.qty || 0);
+    simpleSum += r;
+    if (q > 0) {
+      weightedSum += r * q;
+      weightQty += q;
+    }
+  });
+  if (!rateEntries.length) return 0;
+  return weightQty > 0 ? (weightedSum / weightQty) : (simpleSum / rateEntries.length);
+}
+
 // =================== RENDER: KPIs ===================
 function renderKPIs(rows, compState = { enabled: false, rows: [] }) {
   const orders = new Set(rows.map(r => r.orderId));
@@ -1238,14 +1251,14 @@ function renderCharts(rows, compState = { enabled: false, rows: [] }) {
   attachChartVarianceTooltip(cfgExec, compEnabled ? exMap : null, ' MT');
   mountChart('exec', 'chartExecStatus', cfgExec);
 
-  const stCount = { CONFIRMED: 0, OPEN: 0, CLOSED: 0 };
-  const cStCount = { CONFIRMED: 0, OPEN: 0, CLOSED: 0 };
-  rows.forEach(r => stCount[r.status]++);
-  cRows.forEach(r => cStCount[r.status]++);
-  setChartVarBadge('varBadge_statusPct', rows.length, cRows.length, compEnabled, ' items');
+  const stQty = { CONFIRMED: 0, OPEN: 0, CLOSED: 0 };
+  const cStQty = { CONFIRMED: 0, OPEN: 0, CLOSED: 0 };
+  rows.forEach(r => stQty[r.status] += r.qtyMt);
+  cRows.forEach(r => cStQty[r.status] += r.qtyMt);
+  setChartVarBadge('varBadge_statusPct', exCurrTot, exPrevTot, compEnabled, ' MT');
   const cfgStatusPct = {
     type: 'doughnut',
-    data: { labels: Object.keys(stCount), datasets: [{ data: Object.values(stCount), backgroundColor: ['#15803D','#D97706','#DC2626'] }] },
+    data: { labels: Object.keys(stQty), datasets: [{ data: Object.values(stQty).map(v => +v.toFixed(2)), backgroundColor: ['#15803D','#D97706','#DC2626'] }] },
     options: { responsive:true, maintainAspectRatio:false, plugins: { datalabels: { color:'#fff', formatter: (val, ctx) => { const total = ctx.dataset.data.reduce((a,b)=>a+b,0); return total ? Math.round((val/total)*100)+'%' : '0%'; } } } }
   };
   if (compEnabled) {
@@ -1253,10 +1266,10 @@ function renderCharts(rows, compState = { enabled: false, rows: [] }) {
       callbacks: {
         label: (ctx) => {
           const k = ctx.label;
-          const curr = stCount[k] || 0;
-          const prev = cStCount[k] || 0;
+          const curr = stQty[k] || 0;
+          const prev = cStQty[k] || 0;
           const diff = curr - prev;
-          return `${k}: ${fmt(curr)} items (Comp: ${fmt(prev)} | Var: ${diff >= 0 ? '+' : ''}${fmt(diff)})`;
+          return `${k}: ${fmt(curr, 2)} MT (Comp: ${fmt(prev, 2)} MT | Var: ${diff >= 0 ? '+' : ''}${fmt(diff, 2)} MT)`;
         }
       }
     };
@@ -1432,13 +1445,13 @@ function renderCharts(rows, compState = { enabled: false, rows: [] }) {
   mountChart('med', 'chartMedium', cfgMed);
 }
 
-// =================== RENDER: TABLES (SORTING + PAGINATION + VARIANCE) ===================
+// =================== RENDER: TABLES (SORTING + PAGINATION + QTY TONNAGE) ===================
 const PAGE_SIZE = 100;
 let activeCompState = { enabled: false, cFrom: '', cTo: '', rows: [] };
 const tableState = {
   nway: { page: 1, sortKey: 'totalQty', sortDir: 'desc', data: [] },
   ci: { page: 1, sortKey: 'qty', sortDir: 'desc', data: [] },
-  execPerf: { page: 1, sortKey: 'lines', sortDir: 'desc', data: [] },
+  execPerf: { page: 1, sortKey: 'qty', sortDir: 'desc', data: [] },
   execRate: { page: 1, sortKey: 'material', sortDir: 'asc', data: [], execs: [] }
 };
 
@@ -1600,8 +1613,8 @@ function renderNWay(rows, resetPage = true) {
     ${mkTh('totalQty', 'QTY MT', 'text-right')}
     ${activeCompState.enabled ? mkTh('varQty', 'Var MT', 'text-right text-amber-300') : ''}
     ${mkTh('confQty', 'Conf MT', 'text-right text-emerald-300')}
-    ${mkTh('avgRate', 'Avg ₹', 'text-right')}
-    ${mkTh('convPct', 'Conv', 'text-right')}
+    ${mkTh('avgRate', 'Wtd Avg ₹', 'text-right')}
+    ${mkTh('convPct', 'Conv % (Qty)', 'text-right')}
   </tr>`;
 
   document.querySelectorAll('#nwayThead th[data-sort]').forEach(th => {
@@ -1619,11 +1632,15 @@ function renderNWay(rows, resetPage = true) {
     srcRows.forEach(r => {
       const tuple = dims.map(d => r[d] ?? '-');
       const key = tuple.join('||');
-      if (!groups.has(key)) groups.set(key, { tuple, orders: new Set(), lines: 0, totalQty: 0, confQty: 0, confLines: 0, rates: [] });
+      if (!groups.has(key)) groups.set(key, { tuple, orders: new Set(), lines: 0, totalQty: 0, confQty: 0, openQty: 0, closedQty: 0, rateEntries: [] });
       const g = groups.get(key);
-      g.orders.add(r.orderId); g.lines++; g.totalQty += r.qtyMt;
-      if (r.status === 'CONFIRMED') { g.confQty += r.qtyMt; g.confLines++; }
-      if (r.rate) g.rates.push(r.rate);
+      g.orders.add(r.orderId);
+      g.lines++;
+      g.totalQty += r.qtyMt;
+      if (r.status === 'CONFIRMED') g.confQty += r.qtyMt;
+      else if (r.status === 'OPEN') g.openQty += r.qtyMt;
+      else g.closedQty += r.qtyMt;
+      if (r.rate) g.rateEntries.push({ rate: r.rate, qty: r.qtyMt });
     });
     return groups;
   };
@@ -1640,19 +1657,21 @@ function renderNWay(rows, resetPage = true) {
   currentNWayRows = [...groups.entries()].map(([key, g]) => {
     const totalQty = g.totalQty;
     const confQty = g.confQty;
-    const avgRate = g.rates.length ? g.rates.reduce((a, b) => a + b, 0) / g.rates.length : 0;
+    const avgRate = calcQtyWeightedRate(g.rateEntries);
     const convPct = totalQty > 0 ? (confQty / totalQty) * 100 : 0;
+
     const cg = compGroups.get(key);
     const compOrders = cg ? cg.orders.size : 0;
     const compLines = cg ? cg.lines : 0;
     const compQty = cg ? cg.totalQty : 0;
     const compConfQty = cg ? cg.confQty : 0;
-    const compAvgRate = cg && cg.rates.length ? cg.rates.reduce((a, b) => a + b, 0) / cg.rates.length : 0;
+    const compAvgRate = cg ? calcQtyWeightedRate(cg.rateEntries) : 0;
     const compConvPct = cg && cg.totalQty > 0 ? (cg.confQty / cg.totalQty) * 100 : 0;
     const varQty = totalQty - compQty;
     const varQtyPct = compQty !== 0 ? (varQty / Math.abs(compQty)) * 100 : (totalQty !== 0 ? 100 : 0);
+
     return {
-      tuple: g.tuple, orders: g.orders.size, lines: g.lines, totalQty, confQty, avgRate, convPct,
+      tuple: g.tuple, orders: g.orders.size, lines: g.lines, totalQty, confQty, openQty: g.openQty, closedQty: g.closedQty, avgRate, convPct,
       compOrders, compLines, compQty, compConfQty, compAvgRate, compConvPct, varQty, varQtyPct
     };
   });
@@ -1661,6 +1680,7 @@ function renderNWay(rows, resetPage = true) {
   renderNWayPage();
 }
 
+// =================== CUSTOMER INTELLIGENCE (QTY TONNAGE BASIS) ===================
 function renderCustomerIntelPage() {
   const st = tableState.ci;
   const tbody = document.getElementById('customerIntelTbody');
@@ -1701,9 +1721,9 @@ function renderCustomerIntelPage() {
             ${esc(c.name)}
         </td>
         <td class="py-2.5 px-3 text-right font-medium">${fmt(c.orderCount)}${inlineVarBadge(c.orderCount, c.compOrders, 0)}</td>
-        <td class="py-2.5 px-3 text-right text-emerald-700 font-semibold">${fmt(c.c)} <span class="text-[10px] font-normal text-slate-500">(${c.pConf}%)</span>${inlineVarBadge(c.c, c.compC, 0)}</td>
-        <td class="py-2.5 px-3 text-right text-amber-700">${fmt(c.o)} <span class="text-[10px] font-normal text-slate-500">(${c.pOpen}%)</span>${inlineVarBadge(c.o, c.compO, 0)}</td>
-        <td class="py-2.5 px-3 text-right text-rose-700">${fmt(c.cl)} <span class="text-[10px] font-normal text-slate-500">(${c.pClosed}%)</span>${inlineVarBadge(c.cl, c.compCl, 0)}</td>
+        <td class="py-2.5 px-3 text-right text-emerald-700 font-semibold">${fmt(c.confQty, 2)} <span class="text-[10px] font-normal text-slate-500">(${c.pConf}%)</span>${inlineVarBadge(c.confQty, c.compConfQty, 2, ' MT')}</td>
+        <td class="py-2.5 px-3 text-right text-amber-700 font-semibold">${fmt(c.openQty, 2)} <span class="text-[10px] font-normal text-slate-500">(${c.pOpen}%)</span>${inlineVarBadge(c.openQty, c.compOpenQty, 2, ' MT')}</td>
+        <td class="py-2.5 px-3 text-right text-rose-700 font-semibold">${fmt(c.closedQty, 2)} <span class="text-[10px] font-normal text-slate-500">(${c.pClosed}%)</span>${inlineVarBadge(c.closedQty, c.compClosedQty, 2, ' MT')}</td>
         <td class="py-2.5 px-3 text-right font-bold">${fmt(c.qty, 2)}${inlineVarBadge(c.qty, c.compQty, 2, ' MT')}</td>
         <td class="py-2.5 px-3 text-xs text-slate-500">${esc(c.topSpec)}</td>
         <td class="py-2.5 px-3">${esc(fmtDateDMY(c.last))}</td>
@@ -1713,7 +1733,7 @@ function renderCustomerIntelPage() {
         <td colspan="9" class="py-4 px-6">
             <div class="text-xs font-bold text-slate-700 mb-2 flex items-center justify-between">
                 <span>Line Item Breakdown</span>
-                <span class="text-slate-500 font-normal">Total ${c.totalLines} items</span>
+                <span class="text-slate-500 font-normal">Total ${c.totalLines} items • ${fmt(c.qty, 2)} MT</span>
             </div>
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-1">${detailRows}</div>
         </td>
@@ -1775,14 +1795,16 @@ function renderCustomerIntel(rows) {
   ciRows.forEach(r => {
     if (onlyInactive && !r.inactiveOver30Days) return;
     if (!g.has(r.customerKey)) g.set(r.customerKey, { 
-        name: r.customer, orders: new Set(), c:0, o:0, cl:0, qty:0, 
+        name: r.customer, orders: new Set(), c:0, o:0, cl:0, confQty:0, openQty:0, closedQty:0, qty:0, 
         last: r.lastConfirmedDate || '-', days: r.daysSinceLastConfirmed, 
         specs: new Map(), items: []
     });
     
     const c = g.get(r.customerKey);
     c.orders.add(r.orderId);
-    if (r.status === 'CONFIRMED') c.c++; else if (r.status === 'OPEN') c.o++; else c.cl++;
+    if (r.status === 'CONFIRMED') { c.c++; c.confQty += r.qtyMt; }
+    else if (r.status === 'OPEN') { c.o++; c.openQty += r.qtyMt; }
+    else { c.cl++; c.closedQty += r.qtyMt; }
     c.qty += r.qtyMt;
     
     const spec = `${r.category} | ${r.grade} | ${r.itemName} | ${r.size}`;
@@ -1793,10 +1815,12 @@ function renderCustomerIntel(rows) {
   const compCustMap = new Map();
   if (activeCompState.enabled) {
     activeCompState.rows.forEach(r => {
-      if (!compCustMap.has(r.customerKey)) compCustMap.set(r.customerKey, { orders: new Set(), c:0, o:0, cl:0, qty:0 });
+      if (!compCustMap.has(r.customerKey)) compCustMap.set(r.customerKey, { orders: new Set(), confQty:0, openQty:0, closedQty:0, qty:0 });
       const cc = compCustMap.get(r.customerKey);
       cc.orders.add(r.orderId);
-      if (r.status === 'CONFIRMED') cc.c++; else if (r.status === 'OPEN') cc.o++; else cc.cl++;
+      if (r.status === 'CONFIRMED') cc.confQty += r.qtyMt;
+      else if (r.status === 'OPEN') cc.openQty += r.qtyMt;
+      else cc.closedQty += r.qtyMt;
       cc.qty += r.qtyMt;
     });
   }
@@ -1805,13 +1829,18 @@ function renderCustomerIntel(rows) {
     let topSpec = '-', maxQ = -1;
     c.specs.forEach((q, s) => { if(q > maxQ) { maxQ = q; topSpec = s; }});
     const totalLines = c.c + c.o + c.cl;
-    const pConf = totalLines ? Math.round((c.c / totalLines) * 100) : 0;
-    const pOpen = totalLines ? Math.round((c.o / totalLines) * 100) : 0;
-    const pClosed = totalLines ? Math.round((c.cl / totalLines) * 100) : 0;
+    // Percentage shares based strictly on Qty Tonnage (MT)
+    const pConf = c.qty > 0 ? Math.round((c.confQty / c.qty) * 100) : 0;
+    const pOpen = c.qty > 0 ? Math.round((c.openQty / c.qty) * 100) : 0;
+    const pClosed = c.qty > 0 ? Math.round((c.closedQty / c.qty) * 100) : 0;
     const cc = compCustMap.get(ckey);
     return {
       ...c, orderCount: c.orders.size, topSpec, pConf, pOpen, pClosed, totalLines,
-      compOrders: cc ? cc.orders.size : 0, compC: cc ? cc.c : 0, compO: cc ? cc.o : 0, compCl: cc ? cc.cl : 0, compQty: cc ? cc.qty : 0
+      compOrders: cc ? cc.orders.size : 0,
+      compConfQty: cc ? cc.confQty : 0,
+      compOpenQty: cc ? cc.openQty : 0,
+      compClosedQty: cc ? cc.closedQty : 0,
+      compQty: cc ? cc.qty : 0
     };
   });
 
@@ -1821,6 +1850,7 @@ function renderCustomerIntel(rows) {
   renderCustomerIntelPage();
 }
 
+// =================== SALES EXECUTIVE PERFORMANCE (QTY TONNAGE BASIS) ===================
 function renderExecPerfPage() {
   const st = tableState.execPerf;
   const tb = document.getElementById('execPerfTbody');
@@ -1835,11 +1865,11 @@ function renderExecPerfPage() {
 
   tb.innerHTML = pageRows.map(e => `<tr class="hover:bg-slate-50">
     <td class="py-2.5 px-3 font-semibold text-slate-900">${esc(e.name)}</td>
-    <td class="py-2.5 px-3 text-right font-bold">${fmt(e.lines)}${inlineVarBadge(e.lines, e.compLines, 0)}</td>
+    <td class="py-2.5 px-3 text-right font-medium">${fmt(e.lines)}${inlineVarBadge(e.lines, e.compLines, 0)}</td>
     <td class="py-2.5 px-3 text-right">${fmt(e.orderCount)}${inlineVarBadge(e.orderCount, e.compOrders, 0)}</td>
-    <td class="py-2.5 px-3 text-right text-emerald-700 font-semibold">${fmt(e.c)}${inlineVarBadge(e.c, e.compC, 0)}</td>
-    <td class="py-2.5 px-3 text-right text-amber-700">${fmt(e.o)}${inlineVarBadge(e.o, e.compO, 0)}</td>
-    <td class="py-2.5 px-3 text-right text-rose-700">${fmt(e.cl)}${inlineVarBadge(e.cl, e.compCl, 0)}</td>
+    <td class="py-2.5 px-3 text-right text-emerald-700 font-semibold">${fmt(e.confQty, 2)} <span class="text-[10px] font-normal text-slate-500">(${e.pConf}%)</span>${inlineVarBadge(e.confQty, e.compConfQty, 2, ' MT')}</td>
+    <td class="py-2.5 px-3 text-right text-amber-700 font-semibold">${fmt(e.openQty, 2)} <span class="text-[10px] font-normal text-slate-500">(${e.pOpen}%)</span>${inlineVarBadge(e.openQty, e.compOpenQty, 2, ' MT')}</td>
+    <td class="py-2.5 px-3 text-right text-rose-700 font-semibold">${fmt(e.closedQty, 2)} <span class="text-[10px] font-normal text-slate-500">(${e.pClosed}%)</span>${inlineVarBadge(e.closedQty, e.compClosedQty, 2, ' MT')}</td>
     <td class="py-2.5 px-3 text-right font-semibold text-blue-900">${e.conv.toFixed(1)}%${inlineVarBadge(e.conv, e.compConv, 1, '%')}</td>
     <td class="py-2.5 px-3 text-right font-bold">${fmt(e.qty, 2)}${inlineVarBadge(e.qty, e.compQty, 2, ' MT')}</td>
     <td class="py-2.5 px-3 text-right text-xs">${e.replyMean.toFixed(1)}±${e.replyStd.toFixed(1)}</td>
@@ -1898,24 +1928,29 @@ function initExecPerfSort() {
 function renderExecPerf(rows) {
   const g = new Map();
   rows.forEach(r => {
-    if (!g.has(r.salesExec)) g.set(r.salesExec, { name:r.salesExec, lines:0, orders:new Set(), c:0, o:0, cl:0, qty:0, confQty:0, rates:[], replies:[], specs:new Map() });
+    if (!g.has(r.salesExec)) g.set(r.salesExec, { name:r.salesExec, lines:0, orders:new Set(), c:0, o:0, cl:0, qty:0, confQty:0, openQty:0, closedQty:0, rates:[], replies:[], specs:new Map() });
     const e = g.get(r.salesExec);
     e.lines++; e.orders.add(r.orderId);
-    if (r.status === 'CONFIRMED') { e.c++; e.confQty += r.qtyMt; } else if (r.status === 'OPEN') e.o++; else e.cl++;
+    if (r.status === 'CONFIRMED') { e.c++; e.confQty += r.qtyMt; }
+    else if (r.status === 'OPEN') { e.o++; e.openQty += r.qtyMt; }
+    else { e.cl++; e.closedQty += r.qtyMt; }
     e.qty += r.qtyMt;
-    if (r.rate) e.rates.push(r.rate);
+    if (r.rate) e.rates.push({ rate: r.rate, qty: r.qtyMt });
     if (r.replyMins !== null) e.replies.push(r.replyMins);
     const spec = `${r.category} | ${r.grade} | ${r.itemName} | ${r.size}`;
-    e.specs.set(spec, (e.specs.get(spec)||0)+1);
+    // Top Spec ranked by Qty Tonnage (MT)
+    e.specs.set(spec, (e.specs.get(spec)||0) + r.qtyMt);
   });
 
   const compExecMap = new Map();
   if (activeCompState.enabled) {
     activeCompState.rows.forEach(r => {
-      if (!compExecMap.has(r.salesExec)) compExecMap.set(r.salesExec, { lines:0, orders:new Set(), c:0, o:0, cl:0, qty:0, confQty:0 });
+      if (!compExecMap.has(r.salesExec)) compExecMap.set(r.salesExec, { lines:0, orders:new Set(), qty:0, confQty:0, openQty:0, closedQty:0 });
       const ce = compExecMap.get(r.salesExec);
       ce.lines++; ce.orders.add(r.orderId);
-      if (r.status === 'CONFIRMED') { ce.c++; ce.confQty += r.qtyMt; } else if (r.status === 'OPEN') ce.o++; else ce.cl++;
+      if (r.status === 'CONFIRMED') ce.confQty += r.qtyMt;
+      else if (r.status === 'OPEN') ce.openQty += r.qtyMt;
+      else ce.closedQty += r.qtyMt;
       ce.qty += r.qtyMt;
     });
   }
@@ -1923,21 +1958,28 @@ function renderExecPerf(rows) {
   const list = [...g.values()].map(e => {
     const rM = e.replies.length ? e.replies.reduce((a, b) => a + b, 0) / e.replies.length : 0;
     const rV = e.replies.length > 1 ? e.replies.reduce((s, v) => s + (v - rM) ** 2, 0) / e.replies.length : 0;
-    let topSpec = '-', maxC = -1;
-    e.specs.forEach((n,s) => { if(n>maxC) { maxC=n; topSpec=s; } });
+    let topSpec = '-', maxQtySpec = -1;
+    e.specs.forEach((q, s) => { if (q > maxQtySpec) { maxQtySpec = q; topSpec = s; } });
     const ce = compExecMap.get(e.name);
     const compLines = ce ? ce.lines : 0;
     const compOrders = ce ? ce.orders.size : 0;
-    const compC = ce ? ce.c : 0;
-    const compO = ce ? ce.o : 0;
-    const compCl = ce ? ce.cl : 0;
-    const compQty = ce ? ce.qty : 0;
     const compConfQty = ce ? ce.confQty : 0;
+    const compOpenQty = ce ? ce.openQty : 0;
+    const compClosedQty = ce ? ce.closedQty : 0;
+    const compQty = ce ? ce.qty : 0;
     const compConv = compQty > 0 ? (compConfQty / compQty) * 100 : 0;
+
+    const pConf = e.qty > 0 ? Math.round((e.confQty / e.qty) * 100) : 0;
+    const pOpen = e.qty > 0 ? Math.round((e.openQty / e.qty) * 100) : 0;
+    const pClosed = e.qty > 0 ? Math.round((e.closedQty / e.qty) * 100) : 0;
+
     return {
-      name: e.name, lines: e.lines, orderCount: e.orders.size, c: e.c, o: e.o, cl: e.cl,
-      conv: e.qty > 0 ? (e.confQty / e.qty) * 100 : 0, qty: e.qty, replyMean: rM, replyStd: Math.sqrt(rV), topSpec,
-      compLines, compOrders, compC, compO, compCl, compQty, compConv
+      name: e.name, lines: e.lines, orderCount: e.orders.size,
+      confQty: e.confQty, openQty: e.openQty, closedQty: e.closedQty,
+      pConf, pOpen, pClosed,
+      conv: e.qty > 0 ? (e.confQty / e.qty) * 100 : 0,
+      qty: e.qty, replyMean: rM, replyStd: Math.sqrt(rV), topSpec,
+      compLines, compOrders, compConfQty, compOpenQty, compClosedQty, compQty, compConv
     };
   });
 
@@ -1946,6 +1988,7 @@ function renderExecPerf(rows) {
   updateHeaderSortIndicators('execPerfThead', tableState.execPerf.sortKey, tableState.execPerf.sortDir);
   renderExecPerfPage();
 
+  // Same Material Rate Comparison (Qty-Weighted Average Rate)
   const execs = [...new Set(rows.map(r => r.salesExec))].sort();
   const mm = new Map();
   rows.forEach(r => {
@@ -1954,7 +1997,7 @@ function renderExecPerf(rows) {
     if (!mm.has(k)) mm.set(k, new Map());
     const em = mm.get(k);
     if (!em.has(r.salesExec)) em.set(r.salesExec, []);
-    em.get(r.salesExec).push(r.rate);
+    em.get(r.salesExec).push({ rate: r.rate, qty: r.qtyMt });
   });
 
   const rSt = tableState.execRate;
@@ -1985,7 +2028,7 @@ function renderExecPerf(rows) {
       if (!cMm.has(k)) cMm.set(k, new Map());
       const em = cMm.get(k);
       if (!em.has(r.salesExec)) em.set(r.salesExec, []);
-      em.get(r.salesExec).push(r.rate);
+      em.get(r.salesExec).push({ rate: r.rate, qty: r.qtyMt });
     });
   }
 
@@ -1997,15 +2040,15 @@ function renderExecPerf(rows) {
     execs.forEach(x => {
       const arr = em.get(x);
       if (arr && arr.length) {
-        const avg = arr.reduce((p, c) => p + c, 0) / arr.length;
-        ratesByExec[x] = avg;
-        rowObj[`exec_${x}`] = avg;
+        const wAvg = calcQtyWeightedRate(arr);
+        ratesByExec[x] = wAvg;
+        rowObj[`exec_${x}`] = wAvg;
       } else {
         rowObj[`exec_${x}`] = null;
       }
       const cArr = cEm ? cEm.get(x) : null;
       if (cArr && cArr.length) {
-        compRatesByExec[x] = cArr.reduce((p, c) => p + c, 0) / cArr.length;
+        compRatesByExec[x] = calcQtyWeightedRate(cArr);
       } else {
         compRatesByExec[x] = null;
       }
@@ -2069,11 +2112,11 @@ document.getElementById('toggleFiltersBtn').addEventListener('click', () => {
 document.getElementById('downloadNWayCsvBtn').addEventListener('click', () => {
   if (!currentNWayRows.length) return;
   const dims = getNWayDims();
-  const headers = [...dims.map(k => (NWAY_DIMS.find(d => d.key === k) || { label: k }).label), 'Orders','Lines','QTY_MT','Confirmed_MT','Avg_Rate','Conv_Pct'];
+  const headers = [...dims.map(k => (NWAY_DIMS.find(d => d.key === k) || { label: k }).label), 'Orders','Lines','QTY_MT','Confirmed_MT','Open_MT','Closed_MT','Wtd_Avg_Rate','Conv_Pct_Qty'];
   const lines = [headers.join(',')];
   currentNWayRows.forEach(it => {
     const tupleFormatted = it.tuple.map((v, idx) => dims[idx] === 'date' ? fmtDateDMY(v) : v);
-    lines.push([...tupleFormatted.map(v => `"${String(v).replace(/"/g,'""')}"`), it.orders, it.lines, it.totalQty.toFixed(2), it.confQty.toFixed(2), it.avgRate.toFixed(2), it.convPct.toFixed(2)].join(','));
+    lines.push([...tupleFormatted.map(v => `"${String(v).replace(/"/g,'""')}"`), it.orders, it.lines, it.totalQty.toFixed(2), it.confQty.toFixed(2), it.openQty.toFixed(2), it.closedQty.toFixed(2), it.avgRate.toFixed(2), it.convPct.toFixed(2)].join(','));
   });
   const blob = new Blob([lines.join('\n')], { type: 'text/csv;charset=utf-8;' }); const url = URL.createObjectURL(blob);
   const a = document.createElement('a'); a.href = url; a.download = `Ironmart_NWay_${fmtDateDMY(new Date().toISOString().slice(0,10)).replace(/\//g,'-')}.csv`; a.click(); URL.revokeObjectURL(url);
@@ -2084,8 +2127,8 @@ document.getElementById('downloadCiCsvBtn').addEventListener('click', () => {
   if (!st.data || !st.data.length) return;
   const sorted = [...st.data].sort((a, b) => compareVals(a[st.sortKey], b[st.sortKey], st.sortDir));
   const headers = [
-    'Customer_Name', 'Orders', 'Total_Lines', 'Confirmed_Lines', 'Confirmed_Pct',
-    'Open_Lines', 'Open_Pct', 'Closed_Lines', 'Closed_Pct', 'QTY_MT',
+    'Customer_Name', 'Orders', 'Total_Lines', 'Confirmed_MT', 'Confirmed_Pct_Qty',
+    'Open_MT', 'Open_Pct_Qty', 'Closed_MT', 'Closed_Pct_Qty', 'QTY_MT',
     'Top_Spec', 'Last_Confirmed_Date', 'Inactive_Days'
   ];
   const csvEsc = v => `"${String(v ?? '').replace(/"/g, '""')}"`;
@@ -2095,11 +2138,11 @@ document.getElementById('downloadCiCsvBtn').addEventListener('click', () => {
       csvEsc(c.name),
       c.orderCount,
       c.totalLines,
-      c.c,
+      c.confQty.toFixed(2),
       c.pConf,
-      c.o,
+      c.openQty.toFixed(2),
       c.pOpen,
-      c.cl,
+      c.closedQty.toFixed(2),
       c.pClosed,
       c.qty.toFixed(2),
       csvEsc(c.topSpec),
